@@ -1,0 +1,50 @@
+# languages
+language: Язык
+en: English
+ru: Русский
+
+# authorization
+login: Войти
+logout: Выйти
+login_via: Войти через
+facebook: Facebook
+google: Google
+vkontakte: ВКонтакте
+social: Соцсеть
+socials: Соцсети
+
+# common
+cancel: Отменить
+save: Сохранить
+upload: Загрузить
+
+my:
+  settings: Мои настройки
+
+profile: Профиль
+settings: Настройки
+
+# profile
+Email: Email
+Locale: Язык
+Name: Имя пользователя
+
+app:
+  name: Название приложения
+
+#
+message:
+  auth:
+    user_detach: Аккаунт успешно отвязан!
+  settings:
+    save: Настройки сохранены успешно!
+
+#
+error:
+  auth:
+    user_detach: Этот аккаунт не может быть отключен!
+    user_exists: Пользователь уже существует!
+
+  upload:
+    avatar: Новый аватар не был загружен!
+    format_photo: Загрузите изображение!

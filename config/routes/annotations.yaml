@@ -1,0 +1,6 @@
+controllers:
+    type: annotation
+    resource: ../../src/Controller/
+    prefix:   /{_locale}/
+    requirements:
+        _locale: '%supported_locales%'

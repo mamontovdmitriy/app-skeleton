@@ -1,0 +1,37 @@
+html, body {
+    position: relative;
+    min-height: 100%;
+}
+
+body > .container {
+    padding: 60px 15px 0;
+}
+
+.navbar {
+    padding: 0;
+}
+
+.navbar .img-thumbnail {
+    max-height: 24px;
+    max-width: 24px;
+    padding: 0;
+}
+
+.breadcrumb {
+    padding: 0.25rem 0.75rem;
+}
+
+.underlined {
+    border-bottom: 1px solid lightgray;
+}
+
+label.required:before {
+    margin-right: 2px;
+    color: darkred;
+    content: "*";
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}

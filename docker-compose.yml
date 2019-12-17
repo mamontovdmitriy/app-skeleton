@@ -1,0 +1,95 @@
+version: '3'
+services:
+    site-nginx:
+        build:
+            context: ./docker
+            dockerfile: nginx.docker
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - site-php-fpm
+        ports:
+            - "8080:80"
+        networks:
+            - code-network
+
+    site-php-fpm:
+        build:
+            context: ./docker
+            dockerfile: php-fpm.docker
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - site-postgres
+#            - mailer
+#            - rabbitmq
+        networks:
+            - code-network
+
+    site-php-cli:
+        build:
+            context: ./docker
+            dockerfile: php-cli.docker
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - site-postgres
+#            - mailer
+#            - rabbitmq
+        working_dir: /var/www
+        tty: true
+        networks:
+            - code-network
+
+    site-postgres:
+        image: postgres:9.6-alpine
+        volumes:
+            - ali-postgresql-volume:/var/lib/postgresql/data
+        environment:
+            - "POSTGRES_USER=ali"
+            - "POSTGRES_PASSWORD=ali"
+            - "POSTGRES_DB=ali"
+        ports:
+            - "54321:5432"
+        networks:
+            - code-network
+
+    frontend-nodejs:
+        image: node:10.11-jessie
+        volumes:
+            - ./:/var/www
+        working_dir: /var/www
+        tty: true
+        networks:
+            - code-network
+
+#    mailer:
+#        image: mailhog/mailhog
+#        restart: unless-stopped
+#        ports:
+#            - "1025:1025"
+#            - "8082:8025"
+#        networks:
+#            - code-network
+
+#    rabbitmq:
+#        image: rabbitmq:3-management
+#        environment:
+#            RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
+#            RABBITMQ_DEFAULT_USER: rabbit
+#            RABBITMQ_DEFAULT_PASS: rabbit
+#        ports:
+#            - "8085:15672"
+#            - "5672:5672"
+#        volumes:
+#            - ./rabbitmq/docker/enabled_plugins:/etc/rabbitmq/enabled_plugins
+#        networks:
+#            - code-network
+
+networks:
+    code-network:
+        driver: bridge
+
+volumes:
+    ali-postgresql-volume:
+        external: true

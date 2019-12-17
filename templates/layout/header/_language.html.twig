@@ -1,0 +1,23 @@
+{% set _locale = app.request.locale %}
+{% set _locales = locales|split('|') %}
+{% set _route = app.request.attributes.get('_route') %}
+{% set _parems = app.request.attributes.get('_route_params') %}
+
+<ul class="navbar-nav">
+    <li class="nav-item dropdown">
+        <a href="#"
+           id="navbarLanguageMenu"
+           class="nav-link dropdown-toggle"
+           data-toggle="dropdown"
+           aria-haspopup="false"
+           aria-expanded="true"
+        >{{ _locale|trans }}</a>
+        <div class="dropdown-menu" aria-labelledby="navbarLanguageMenu">
+            {% for _loc in _locales if _loc != _locale %}
+                {% set _params_lang = _parems|merge({'_locale': _loc}) %}
+                {% set _href = url(_route, _params_lang) %}
+                <a class="dropdown-item" href="{{ _href }}">{{ _loc|trans }}</a>
+            {% endfor %}
+        </div>
+    </li>
+</ul>

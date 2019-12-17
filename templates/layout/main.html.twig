@@ -1,0 +1,15 @@
+{% extends('layout/base.html.twig') %}
+
+{% block body %}
+    {% include 'layout/_header.html.twig' %}
+
+    <main role="main" class="container">
+        {% include 'layout/_breadcrumbs.html.twig' %}
+
+        {% include 'layout/_alerts.html.twig' %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'layout/_footer.html.twig' %}
+{% endblock %}

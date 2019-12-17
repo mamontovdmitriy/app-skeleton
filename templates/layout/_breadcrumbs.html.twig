@@ -1,0 +1,18 @@
+{% if breadcrumb is defined %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb"
+            itemscope itemtype="http://data-vocabulary.org/Breadcrumb"
+            xmlns:v="http://rdf.data-vocabulary.org/#"
+        >
+            {% for item in breadcrumb %}
+                {% if item.link is defined %}
+                    <li class="breadcrumb-item">
+                        <a href="{{ item.link }}" itemprop="url" rel="v:url" property="v:title">{{ item.name }}</a>
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item active" aria-current="page" property="v:title">{{ item.name }}</li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+{% endif %}

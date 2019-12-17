@@ -1,0 +1,14 @@
+{% extends 'layout/main.html.twig' %}
+
+{% block title %}{{ 'login'|trans }}{% endblock %}
+{% block description %}{{ 'login'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="form-login-wrapper">
+        <div class="form-login">
+            <h1 class="h3 mb-3 font-weight-normal">{{ 'login_via'|trans }}</h1>
+
+            {% include 'auth/_login_buttons.html.twig' %}
+        </div>
+    </div>
+{% endblock %}

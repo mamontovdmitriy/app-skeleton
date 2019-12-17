@@ -1,0 +1,10 @@
+{% extends 'layout/main.html.twig' %}
+
+{% block title %}{{ 'my.settings'|trans }}{% endblock %}
+{% block description %}{{ 'my.settings'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        {% include '/common/user_info.html.twig' %}
+    </div>
+{% endblock %}

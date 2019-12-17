@@ -1,0 +1,49 @@
+# languages
+language: Language
+en: English
+ru: Русский
+
+# authorization
+login: Login
+logout: Logout
+login_via: Login via
+facebook: Facebook
+google: Google
+vkontakte: VKontakte
+social: Social network
+socials: Social networks
+
+# common
+cancel: Cancel
+save: Save
+upload: Upload
+
+#
+my:
+  settings: My settings
+
+profile: Profile
+settings: Settings
+
+# profile
+Email: Email
+Locale: Locale
+Name: Username
+
+app:
+  name: Application Name
+
+message:
+  auth:
+    user_detach: This account detached!
+  settings:
+    save: Settings saved successfully!
+#
+error:
+  auth:
+    user_detach: This account can't be detached!
+    user_exists: User already exists!
+
+  upload:
+    avatar: New avatar doesn't load!
+    format_photo: Please upload a valid Photo

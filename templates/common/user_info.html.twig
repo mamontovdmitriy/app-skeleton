@@ -1,0 +1,13 @@
+{% set user = user|default(app.user) %}
+<div class="row">
+    <div class="col-sm-4 col-md-4 col-lg-3">
+        <img src="{{ avatar(user) }}"
+             alt="{{ user.name }}"
+             class="rounded mx-auto d-block avatar"/>
+    </div>
+    <div class="col-sm-8 col-md-8 col-lg-9">
+        <h2 class="border-bottom">{{ user.name }}</h2>
+        {% include 'common/_user_social.html.twig' with {'user':user} only %}
+    </div>
+</div>
+

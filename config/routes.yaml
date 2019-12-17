@@ -1,0 +1,46 @@
+default:
+  path: /
+  controller: App\Controller\DefaultController::index
+
+main:
+  path: /{_locale}
+  controller: App\Controller\DefaultController::main
+  requirements:
+    _locale: '%supported_locales%'
+
+locale:
+  path: /locale/{_locale}
+  controller: App\Controller\DefaultController::locale
+  requirements:
+    locale: '%supported_locales%'
+
+logout:
+  path: /logout
+
+login:
+  path: /{_locale}/login
+  controller: App\Controller\AuthController::login
+  requirements:
+    _locale: '%supported_locales%'
+
+auth:
+  path: /auth/{network}
+  controller: App\Controller\AuthController::via
+  requirements:
+    network: google|facebook|vkontakte
+
+connect_check:
+  path: /auth/{network}/check
+  controller: App\Controller\AuthController::check
+  requirements:
+    network: google|facebook|vkontakte
+
+auth_detach:
+  path: /auth/{network}/detach
+  controller: App\Controller\AuthController::detach
+  requirements:
+    network: google|facebook|vkontakte
+
+
+
+

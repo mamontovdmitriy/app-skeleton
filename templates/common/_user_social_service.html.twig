@@ -1,0 +1,9 @@
+{% set service = service|default('') %}
+{% set active = active|default(false) %}
+{% set icon = icon|default('') %}
+
+{% set color = active ? 'text-primary' : 'text-secondary disabled' %}
+
+<div class="d-inline-block m-2 {{ color }}">
+    <i class="fab fa-{{ icon }}"></i> {{ service|trans }}
+</div>

@@ -1,0 +1,9 @@
+twig:
+    debug: '%kernel.debug%'
+    default_path: '%kernel.project_dir%/templates'
+    form_themes: ['bootstrap_4_layout.html.twig', 'form/social_button.html.twig']
+    strict_variables: '%kernel.debug%'
+
+    globals:
+        locales: '%supported_locales%'
+        app_name: '%app_name%'

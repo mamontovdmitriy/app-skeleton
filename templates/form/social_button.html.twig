@@ -1,0 +1,27 @@
+{% block social_button_widget %}
+    {% if value is empty %}
+        {{ block('social_button_empty') }}
+    {% else %}
+        {{ block('social_button_linked') }}
+    {% endif %}
+{% endblock %}
+
+{% block social_button_empty %}
+    <a class="btn btn-block {{ class }} text-white"
+       href="{{ path('auth', {'network': provider}) }}"
+    >{{ provider|trans }}</a>
+{% endblock %}
+
+{% block social_button_linked %}
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text {{ class }} text-white">{{ provider|trans }}</span>
+        </div>
+        <input type="text" class="form-control disabled" readonly value="{{ value }}">
+        <div class="input-group-append">
+            <a class="btn btn-danger"
+               href="{{ path('auth_detach', {'network': provider}) }}"
+            ><span aria-hidden="true">&times;</span></a>
+        </div>
+    </div>
+{% endblock %}

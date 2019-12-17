@@ -1,0 +1,38 @@
+.form-login-wrapper {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.form-login {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-login h1 {
+    text-align: center;
+}
+
+.form-login .btn,
+.form-login .btn:hover {
+    color: white;
+}
+
+.btn-facebook {
+    background-color: #3f51b5 !important;
+}
+.btn-google {
+    background-color: #f44336 !important;
+}
+.btn-vkontakte {
+    background-color: #448aff !important;
+}

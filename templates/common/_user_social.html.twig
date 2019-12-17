@@ -1,0 +1,25 @@
+<div class="border-bottom">
+    <div class="d-flex">
+        <div class="d-inline-block my-2 text-dark font-weight-bold">
+            {{ 'socials'|trans }}:
+        </div>
+
+        {% include 'common/_user_social_service.html.twig' with {
+            'service': 'google',
+            'icon': 'google',
+            'active': user.googleId is not empty
+        } %}
+
+        {% include 'common/_user_social_service.html.twig' with {
+            'service': 'facebook',
+            'icon': 'facebook-f',
+            'active': user.fbId is not empty
+        } %}
+
+        {% include 'common/_user_social_service.html.twig' with {
+            'service': 'vkontakte',
+            'icon': 'vk',
+            'active': user.vkId is not empty
+        } %}
+    </div>
+</div>
