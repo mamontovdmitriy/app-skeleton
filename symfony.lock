@@ -96,6 +96,9 @@
     "guzzlehttp/psr7": {
         "version": "1.6.1"
     },
+    "imagine/imagine": {
+        "version": "1.2.3"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -119,6 +122,19 @@
     },
     "league/oauth2-google": {
         "version": "3.0.2"
+    },
+    "liip/imagine-bundle": {
+        "version": "1.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.8",
+            "ref": "1d42bc3f713130582e6e0c475c49bc327ab0a2a2"
+        },
+        "files": [
+            "config/packages/liip_imagine.yaml",
+            "config/routes/liip_imagine.yaml"
+        ]
     },
     "monolog/monolog": {
         "version": "1.25.2"
@@ -372,6 +388,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.3.8"
+    },
+    "symfony/templating": {
+        "version": "v4.3.9"
     },
     "symfony/test-pack": {
         "version": "v1.0.6"
