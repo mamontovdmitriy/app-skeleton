@@ -114,6 +114,9 @@
             "config/packages/knpu_oauth2_client.yaml"
         ]
     },
+    "league/flysystem": {
+        "version": "1.0.62"
+    },
     "league/oauth2-client": {
         "version": "2.4.1"
     },
@@ -139,11 +142,26 @@
     "monolog/monolog": {
         "version": "1.25.2"
     },
+    "nikic/php-parser": {
+        "version": "v4.3.0"
+    },
     "ocramius/package-versions": {
         "version": "1.4.2"
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "oneup/flysystem-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "0eb87bba411c227da027fe5f7c1dc7954b02f242"
+        },
+        "files": [
+            "config/packages/oneup_flysystem.yaml"
+        ]
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -159,6 +177,9 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "ramsey/uuid": {
+        "version": "3.9.2"
     },
     "symfony/asset": {
         "version": "v4.3.8"
@@ -278,6 +299,15 @@
     },
     "symfony/intl": {
         "version": "v4.3.9"
+    },
+    "symfony/maker-bundle": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
+        }
     },
     "symfony/mime": {
         "version": "v4.3.8"

@@ -3,48 +3,49 @@
 namespace App\Tests\Service;
 
 use App\Service\StorageService;
+use League\Flysystem\FilesystemInterface;
 use PHPUnit\Framework\TestCase;
 
 class StorageServiceTest extends TestCase
 {
-    const PROJECT_PATH = '/var/www/project';
-    const STORAGE_PATH = 'public/storage';
     const STORAGE_NAME = 'storage';
 
+    const AVATAR_DIR = 'avatars';
     const IMAGE_DIR = 'images';
 
 
-    public function testStoragePath()
+    public function testStorageDir()
     {
         $imageStorage = $this->getStorageService();
-        $this->assertStringEndsWith(self::STORAGE_NAME, $imageStorage->getPathStorage());
+        $this->assertEquals(self::STORAGE_NAME, $imageStorage->getStorageDir());
     }
 
-    public function testStorageName()
+    public function testStorageGetUrl()
     {
         $imageStorage = $this->getStorageService();
-        $this->assertEquals(self::STORAGE_NAME, $imageStorage->getDirStorage());
+
+        $this->assertEquals('/storage/images/no-image-icon.png', $imageStorage->getUrl());
+        $this->assertEquals('/storage/images/no-image-icon.png', $imageStorage->getUrl(StorageService::DIR_IMAGES));
+        $this->assertEquals('/storage/avatars/no-image-icon.png', $imageStorage->getUrl(StorageService::DIR_AVATAR));
+        $this->assertEquals('/storage/avatars/1.jpeg', $imageStorage->getUrl(StorageService::DIR_AVATAR, '1.jpeg'));
+        $this->assertEquals('/storage/avatars/2.png', $imageStorage->getUrl(StorageService::DIR_AVATAR, '2.png'));
+        $this->assertEquals('/storage/images/3.jpeg', $imageStorage->getUrl(StorageService::DIR_IMAGES, '3.jpeg'));
+        $this->assertEquals('/storage/images/4.png', $imageStorage->getUrl(StorageService::DIR_IMAGES, '4.png'));
+        $this->assertEquals('/storage/images/5.jpeg', $imageStorage->getUrl(null, '5.jpeg'));
+
+        $this->assertEquals('/storage/images/no-image-icon.png', $imageStorage->getUrl('', ''));
+        $this->assertEquals('/storage/111/222', $imageStorage->getUrl('111', '222'));
     }
 
-    public function testSomeDirUrl()
-    {
-        $imageStorage = $this->getStorageService();
-        $url = DIRECTORY_SEPARATOR . self::STORAGE_NAME . DIRECTORY_SEPARATOR . self::IMAGE_DIR;
-        $this->assertEquals($url, $imageStorage->getUrl(self::IMAGE_DIR));
-    }
-
-    public function testSomeDirPath()
-    {
-        $imageStorage = $this->getStorageService();
-        $path = self::STORAGE_PATH . DIRECTORY_SEPARATOR . self::IMAGE_DIR;
-        $this->assertEquals($path, $imageStorage->getPath(self::IMAGE_DIR));
-    }
     /**
      * @return StorageService
      * @throws \Exception
      */
     private function getStorageService()
     {
-        return new StorageService(self::PROJECT_PATH, self::STORAGE_PATH, self::STORAGE_NAME);
+        /** @var FilesystemInterface $publicFileSystem */
+        $publicFileSystem = self::createMock(FilesystemInterface::class);
+
+        return new StorageService($publicFileSystem, $publicFileSystem, self::STORAGE_NAME);
     }
 }

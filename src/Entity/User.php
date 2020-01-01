@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use App\Helpers\TimestampField;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -109,11 +110,17 @@ class User implements UserInterface
     private $vkId = '';
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AvatarImage", mappedBy="user", orphanRemoval=true)
+     */
+    private $avatars;
+
+    /**
      * User constructor.
      * @throws Exception
      */
     public function __construct()
     {
+        $this->setAvatars(new ArrayCollection());
         $this->setCreated(new DateTime());
         $this->setUpdated($this->getCreated());
     }
@@ -276,6 +283,39 @@ class User implements UserInterface
     public function setVkId($vkId)
     {
         $this->vkId = $vkId;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAvatars()
+    {
+        return $this->avatars;
+    }
+
+    /**
+     * @param ArrayCollection $avatars
+     */
+    public function setAvatars($avatars)
+    {
+        $this->avatars = $avatars;
+    }
+
+    /**
+     * @return AvatarImage|null
+     */
+    public function getAvatar()
+    {
+        if ($this->getAvatars()->count() > 0) {
+            /** @var AvatarImage $avatar */
+            foreach ($this->getAvatars() as $avatar) {
+                if ($avatar->isActive()) {
+                    return $avatar;
+                }
+            }
+        }
+
+        return null;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -125,7 +125,7 @@ class UserService
         $this->saveSocialId($user, $provider, $userData);
         $this->saveUser($user);
 
-        $this->avatarService->putAvatar($user->getId(), $userData['picture'] ?? '');
+        $this->avatarService->saveAvatar($user, $userData['picture'] ?? '');
 
         return $user;
     }
