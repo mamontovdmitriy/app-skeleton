@@ -39,6 +39,6 @@ class AvatarExtension extends AbstractExtension
      */
     public function getAvatar(User $user)
     {
-        return $this->avatarService->getAvatarPath($user->getId());
+        return $this->avatarService->getAvatarUrl($user);
     }
 }

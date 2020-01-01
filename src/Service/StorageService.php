@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use Exception;
+use League\Flysystem\FilesystemInterface;
 
 /**
  * Class ImageStorageService
@@ -13,75 +13,70 @@ class StorageService
     const DIR_AVATAR = 'avatars';
     const DIR_IMAGES = 'images';
 
+    const NO_PHOTO_FILE = 'no-image-icon.png';
+
+    /**
+     * @var FilesystemInterface
+     */
+    private $publicFileSystem;
+    /**
+     * @var FilesystemInterface
+     */
+    private $privateFileSystem;
     /**
      * @var string
      */
-    private $pathStorage;
-    /**
-     * @var string
-     */
-    private $dirStorage;
+    private $storageDir;
 
     /**
      * ImageStorageService constructor.
-     * @param string $pathProject
-     * @param string $pathStorage
-     * @param string $dirStorage
-     * @throws Exception
+     * @param FilesystemInterface $privateFileSystem
+     * @param FilesystemInterface $publicFileSystem
+     * @param string $storageDir
      */
-    public function __construct($pathProject, $pathStorage, $dirStorage)
+    public function __construct(FilesystemInterface $privateFileSystem, FilesystemInterface $publicFileSystem, string $storageDir)
     {
-        if (!file_exists($pathStorage)) {
-            $pathStorage = $pathProject . DIRECTORY_SEPARATOR . $pathStorage;
+        $this->privateFileSystem = $privateFileSystem;
+        $this->publicFileSystem = $publicFileSystem;
+        $this->storageDir = $storageDir;
+    }
 
-            if (!file_exists($pathStorage)) {
-                throw new Exception(sprintf('Path "%s" doesn`t exist!', $pathStorage));
-            }
-        }
+    /**
+     * @return FilesystemInterface
+     */
+    public function getPublicFileSystem(): FilesystemInterface
+    {
+        return $this->publicFileSystem;
+    }
 
-        if (!is_dir($pathStorage)) {
-            throw new Exception(sprintf('Path "%s" is not a directory!', $pathStorage));
-        }
-
-        if (!is_writable($pathStorage)) {
-            throw new Exception(sprintf('Dir "%s" doesn`t writable!', $pathStorage));
-        }
-
-        $this->pathStorage = $pathStorage;
-        $this->dirStorage = $dirStorage;
+    /**
+     * @return FilesystemInterface
+     */
+    public function getPrivateFileSystem(): FilesystemInterface
+    {
+        return $this->privateFileSystem;
     }
 
     /**
      * @return string
      */
-    public function getDirStorage()
+    public function getStorageDir(): string
     {
-        return $this->dirStorage;
+        return $this->storageDir;
     }
 
     /**
+     * @param string|null $dir
+     * @param string|null $file
      * @return string
      */
-    public function getPathStorage()
+    public function getUrl($dir = null, $file = null)
     {
-        return $this->pathStorage;
-    }
+        $dir = $dir ?: self::DIR_IMAGES;
+        $file = $file ?: self::NO_PHOTO_FILE;
 
-    /**
-     * @param string $dir
-     * @return string
-     */
-    public function getPath($dir)
-    {
-        return $this->getPathStorage() . DIRECTORY_SEPARATOR . $dir;
-    }
-
-    /**
-     * @param string $dir
-     * @return string
-     */
-    public function getUrl($dir)
-    {
-        return DIRECTORY_SEPARATOR . $this->getDirStorage() . DIRECTORY_SEPARATOR . $dir;
+        return DIRECTORY_SEPARATOR . $this->getStorageDir()
+            . DIRECTORY_SEPARATOR . $dir
+            . DIRECTORY_SEPARATOR . $file;
     }
 }

@@ -9,6 +9,7 @@ use App\Helpers\Controller;
 use App\Helpers\Flash;
 use App\Service\AvatarService;
 use App\Service\UserService;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +31,7 @@ class CabinetController extends Controller
      * @param string $locales
      *
      * @return Response
+     * @throws Exception
      */
     public function settings(Request $request, AvatarService $avatarService, UserService $userService, $locales)
     {
@@ -47,11 +49,11 @@ class CabinetController extends Controller
 
         // Handle avatar uploading form
         $formUpload = $this->createForm(UploadAvatarType::class, null, [
-            'src' => $avatarService->getAvatarPath($user->getId()),
+            'src' => $avatarService->getAvatarUrl($user),
         ]);
         $formUpload->handleRequest($request);
         if ($formUpload->isSubmitted() && $formUpload->isValid()) {
-            $success = $avatarService->uploadAvatar($user->getId(), $formUpload[UploadAvatarType::IMAGE_NAME]->getData());
+            $success = $avatarService->saveAvatar($user, $formUpload[UploadAvatarType::IMAGE_NAME]->getData());
             if ($success) {
                 $this->addFlash(Flash::TYPE_SUCCESS, $this->trans('message.upload.avatar'));
             } else {

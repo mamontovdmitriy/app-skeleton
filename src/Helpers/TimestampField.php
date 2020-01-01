@@ -18,8 +18,13 @@ Trait TimestampField
      */
     public function updateTimestamp()
     {
+        // todo setUpdated is deprecated. You should use setUpdatedAt()
         if (method_exists($this, 'setUpdated')) {
             $this->setUpdated(new DateTime());
+        }
+
+        if (method_exists($this, 'setUpdatedAt')) {
+            $this->setUpdatedAt(new DateTime());
         }
     }
 }

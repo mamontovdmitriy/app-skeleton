@@ -2,10 +2,14 @@
 
 namespace App\Service;
 
+use App\Entity\AvatarImage;
+use App\Entity\User;
+use App\Helpers\FileInfo;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AvatarService
@@ -13,7 +17,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class AvatarService
 {
-    const EXTENSION = '.jpeg';
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var StorageService
@@ -21,85 +33,84 @@ class AvatarService
     private $storageService;
 
     /**
-     * @var string
-     */
-    private $pathStorageAvatar;
-
-    /**
-     * @var string
-     */
-    private $urlStorageAvatar;
-
-    /**
      * AvatarService constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
      * @param StorageService $storageService
      */
-    public function __construct(StorageService $storageService)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, StorageService $storageService)
     {
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
         $this->storageService = $storageService;
-
-        $this->pathStorageAvatar = $this->storageService->getPath(StorageService::DIR_AVATAR);
-        $this->urlStorageAvatar = $this->storageService->getUrl(StorageService::DIR_AVATAR);
     }
 
     /**
-     * Get path for avatar file.
+     * Get avatar's relative URL.
      *
-     * @param int $userId
-     * @param bool $isUrl
+     * @param User $user
      * @return string
      */
-    public function getAvatarPath($userId, $isUrl = true)
+    public function getAvatarUrl(User $user)
     {
-        if ($isUrl) {
-            return $this->urlStorageAvatar . DIRECTORY_SEPARATOR . $userId . self::EXTENSION;
-        }
+        $fileName = $user->getAvatar()
+            ? $user->getAvatar()->getFullFileName()
+            : StorageService::NO_PHOTO_FILE;
 
-        return $this->pathStorageAvatar . DIRECTORY_SEPARATOR . $userId . self::EXTENSION;
+        return $this->storageService->getUrl(StorageService::DIR_AVATAR, $fileName);
     }
 
     /**
-     * Download and save avatar from social network.
+     * Save avatar from uploaded file OR social media URL
      *
-     * @param int $userId
-     * @param string $url
+     * @param User $user
+     * @param UploadedFile|string $source
+     * @return bool
      * @throws Exception
      */
-    public function putAvatar($userId, $url)
+    public function saveAvatar(User $user, $source = null)
     {
-        $content = file_get_contents($url);
-        if (empty($content)) {
-            throw new NotFoundHttpException(sprintf('File "%s" is not available!', $url));
-        }
-
-        $fullFileName = $this->pathStorageAvatar . DIRECTORY_SEPARATOR . $userId . self::EXTENSION;
-
-        $success = file_put_contents($fullFileName, $content);
-        if (!$success) {
-            throw new Exception(sprintf('File "%s" is not saved!', $fullFileName));
-        }
-    }
-
-    /**
-     * Upload new avatar for user.
-     *
-     * @param int $userId
-     * @param File|null $uploadFile
-     * @return bool
-     */
-    public function uploadAvatar($userId, File $uploadFile = null)
-    {
-        if (!$uploadFile) {
-            return false;
-        }
-
+        $this->entityManager->beginTransaction();
         try {
-            // todo NOT SAFE - uploaded image needs to resize
-            $uploadFile->move($this->pathStorageAvatar, $userId. self::EXTENSION);
-        } catch (FileException $e) {
-            return false;
+            if ($source instanceof File) {
+                $url = $source->getRealPath();
+                $fileInfo = $source;
+            } elseif (is_string($source)) {
+                $url = $source;
+                $fileInfo = FileInfo::getRemoteFileInfoByUrl($url);
+            } else {
+                return false;
+            }
+
+            $avatar = new AvatarImage(
+                $user,
+                $fileInfo->getFilename(),
+                $fileInfo->getExtension(),
+                $fileInfo->getMimeType(),
+                $fileInfo->getSize()
+            );
+
+            $this->entityManager->persist($avatar);
+            $this->entityManager->flush($avatar);
+
+            $file = fopen($url, 'r');
+            if (!is_resource($file)) {
+                throw new Exception(sprintf('File "%s" is not available!', $url));
+            }
+
+            $fileName = StorageService::DIR_AVATAR . DIRECTORY_SEPARATOR . $avatar->getFullFileName();
+
+            $success = $this->storageService->getPublicFileSystem()->writeStream($fileName, $file);
+
+            fclose($file);
+
+            $this->entityManager->commit();
+        } catch (Exception $exception) {
+            $this->entityManager->rollback();
+            $this->logger->warning($exception->getMessage());
+            $success = false;
         }
 
-        return true;
+        return $success;
     }
 }

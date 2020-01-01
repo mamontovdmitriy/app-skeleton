@@ -1,0 +1,22 @@
+# Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/tree/master/Resources/doc/index.md
+oneup_flysystem:
+    adapters:
+        default_adapter:
+            local:
+                directory: '%kernel.cache_dir%/flysystem'
+        public_adapter:
+            local:
+                directory: '%kernel.project_dir%/public/%env(APP_STORAGE_DIR)%'
+        private_adapter:
+            local:
+                directory: '%kernel.project_dir%/var/%env(APP_STORAGE_DIR)%'
+
+    filesystems:
+        default_filesystem:
+            adapter: default_adapter
+            alias: League\Flysystem\Filesystem
+        public_filesystem:
+            adapter: public_adapter
+        private_filesystem:
+            adapter: private_adapter
+
